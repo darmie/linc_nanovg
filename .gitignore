@@ -5,3 +5,5 @@
 thumbs.db
 .thumbs.db?
 bin/
+test/snow/*.project/
+test/snow_gles/*.project/

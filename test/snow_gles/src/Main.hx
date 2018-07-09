@@ -14,6 +14,7 @@ typedef UserConfig = {}
 class Main extends snow.App {
     
     var font:Int;
+    var fontBold: Int;
     var vg:cpp.Pointer<NvgContext>;
     var linearGradient:NvgPaint;
 
@@ -46,6 +47,10 @@ class Main extends snow.App {
         app.assets.bytes("assets/DroidSans.ttf").then(function(b:AssetBytes){   
             font = Nvg.createFontMem(vg, "arial", cpp.Pointer.ofArray(b.bytes.buffer), b.bytes.length, 1);
         });
+
+        app.assets.bytes("assets/DroidSansBold.ttf").then(function(b:AssetBytes){   
+            fontBold = Nvg.createFontMem(vg, "arial-bold", cpp.Pointer.ofArray(b.bytes.buffer), b.bytes.length, 1);
+        });        
 
         var dpr = app.runtime.window_device_pixel_ratio();
         var render_w = app.runtime.window_width();
@@ -113,7 +118,7 @@ class Main extends snow.App {
         // Nvg.text(vg, 100, 50, "This is some text", null);
 
         Nvg.fontSize(vg, 50.0);
-        Nvg.fontFaceId(vg, font);
+        Nvg.fontFaceId(vg, fontBold);
         Nvg.fillColor(vg, Nvg.rgba(255,255,255, 192));
         Nvg.textAlign(vg, NvgAlign.ALIGN_CENTER|NvgAlign.ALIGN_MIDDLE);
         Nvg.text(vg, Math.floor(window_width/2), 60, "Home", null);
