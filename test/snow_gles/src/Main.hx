@@ -17,6 +17,7 @@ class Main extends snow.App {
     var fontBold: Int;
     var vg:cpp.Pointer<NvgContext>;
     var linearGradient:NvgPaint;
+    var count:Int;
 
     function new() {}
 
@@ -43,22 +44,19 @@ class Main extends snow.App {
 
         vg = Nvg.createGL(NvgMode.ANTIALIAS|NvgMode.STENCIL_STROKES);
 
+        this.count = 0;
 
-        app.assets.bytes("assets/DroidSans.ttf").then(function(b:AssetBytes){   
-            font = Nvg.createFontMem(vg, "arial", cpp.Pointer.ofArray(b.bytes.buffer), b.bytes.length, 1);
+        var fontP = app.assets.bytes("assets/DroidSans.ttf");
+        var fontBoldP = app.assets.bytes("assets/DroidSansBold.ttf");
+
+        snow.api.Promise.all([
+            fontP,
+            fontBoldP
+        ]).then(function(b:Array<AssetBytes>){
+            font = Nvg.createFontMem(vg, "arial", cpp.Pointer.ofArray(b[0].bytes.buffer), b[0].bytes.length, 1);
+            fontBold = Nvg.createFontMem(vg, "arial-bold", cpp.Pointer.ofArray(b[1].bytes.buffer), b[1].bytes.length, 1);
         });
 
-        app.assets.bytes("assets/DroidSansBold.ttf").then(function(b:AssetBytes){   
-            fontBold = Nvg.createFontMem(vg, "arial-bold", cpp.Pointer.ofArray(b.bytes.buffer), b.bytes.length, 1);
-        });        
-
-        var dpr = app.runtime.window_device_pixel_ratio();
-        var render_w = app.runtime.window_width();
-        var render_h = app.runtime.window_height();
-        var window_width = Math.floor(render_w/dpr);
-        var window_height = Math.floor(render_h/dpr);
-
-        linearGradient = Nvg.linearGradient(vg, 100, 180, 100, 120, Nvg.rgba(0, 0, 0, 50), Nvg.rgba(0, 0, 0, 80));
 
     } //ready
 
@@ -79,6 +77,13 @@ class Main extends snow.App {
             //- nanovg takes window size + ratio, easy!
 
         var dpr = app.runtime.window_device_pixel_ratio();
+
+        #if ios
+            dpr = 1.0;
+        #end
+
+        //trace('DPR: ${dpr}');
+
         var render_w = app.runtime.window_width();
         var render_h = app.runtime.window_height();
         var window_width = Math.floor(render_w/dpr);
@@ -91,6 +96,7 @@ class Main extends snow.App {
         GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
 		GL.enable(GL.CULL_FACE);
 		GL.disable(GL.DEPTH_TEST);
+
 
         Nvg.beginFrame(vg, window_width, window_height, dpr);
 
@@ -105,6 +111,7 @@ class Main extends snow.App {
         Nvg.fillPaint(vg, shadowPaint);
         Nvg.fill(vg);   
 
+        linearGradient = Nvg.linearGradient(vg, 100, 180, 100, 120, Nvg.rgba(0, 0, 0, 50), Nvg.rgba(0, 0, 0, 80));
         Nvg.beginPath(vg);
         Nvg.rect(vg, 0, 0, window_width, 120);
         Nvg.fillColor(vg, Nvg.rgba(28,30,34,192));
@@ -143,8 +150,8 @@ class Main extends snow.App {
         Nvg.endFrame(vg); 
     }
 
-    override function tick( delta:Float ) {
-        drawPage();       
-    } //update
+     override function tick( delta:Float ) {
+        drawPage();
+     } //update
 
 } //Main

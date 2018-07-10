@@ -4,12 +4,12 @@
 #if defined(NANOVG_GL2_IMPLEMENTATION) || defined(NANOVG_GL3_IMPLEMENTATION)
 #define GLEW 1
 #include <GL/glew.h>
-#elif defined(NANOVG_GLES3_IMPLEMENTATION) && defined(IPHONEOS)
+#elif defined(NANOVG_GLES3_IMPLEMENTATION) && defined(IPHONE)
 #include <OpenGLES/ES3/gl.h>
 #elif defined(NANOVG_GLES3_IMPLEMENTATION) && defined(ANDROID)
 #include <GLES3/gl3.h>
-#elif defined(NANOVG_GLES2_IMPLEMENTATION) && defined(IPHONEOS)
-#include <OpenGLES/ES3/gl.h>
+#elif defined(NANOVG_GLES2_IMPLEMENTATION) && defined(IPHONE)
+#include <OpenGLES/ES2/gl.h>
 #elif defined(NANOVG_GLES2_IMPLEMENTATION) && defined(ANDROID)
 #include <GLES2/gl2.h>
 #endif
